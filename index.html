@@ -1,0 +1,28 @@
+<!-- https://teachablemachine.withgoogle.com/models/ZtEpbRKb0/ -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Image Classification</title>
+  </head>
+  <body>
+    <input type="file" id="imageUpload" accept="image/*"/>
+    <button type="button" id="predictButton">Predict</button>
+    <div id="prediction"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script>
+        let model;
+        async function loadModel() {
+        model = await tf.loadLayersModel('https://teachablemachine.withgoogle.com/models/ZtEpbRKb0/model.json');
+        }
+        loadModel();
+        document.getElementById('predictButton').addEventListener('click', async function(){
+        let imageUpload = document.getElementById('imageUpload');
+        let image = await tf.browser.fromPixels(imageUpload.files[0]);
+        image = image.reshape([1, ...image.shape]);
+        let prediction = model.predict(image);
+        document.getElementById('prediction').innerHTML = `Prediction: ${prediction}`;
+        });
+    </script>
+  </body>
+</html>
